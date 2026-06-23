@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title id="pageTitle">ZandiHair — Premium Hair Collections</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ── Reset & tokens ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --espresso:  #1C1009;
+  --mocha:     #3B2314;
+  --gold:      #C9A84C;
+  --gold-lt:   #E8CA7A;
+  --cream:     #FAF6F0;
+  --warm-gray: #EDE8E1;
+  --text:      #2A1F14;
+  --muted:     #7A6A58;
+  --danger:    #C0392B;
+  --success:   #27AE60;
+  --wa-green:  #25D366;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text); }
+h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+img { max-width: 100%; }
+button { cursor: pointer; font-family: 'Inter', sans-serif; }
+
+/* ── Nav ──────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--espresso);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 64px;
+  box-shadow: 0 2px 20px rgba(0,0,0,.4);
+}
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  color: var(--gold); font-size: 1.5rem; letter-spacing: .04em;
+  text-decoration: none;
+}
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-link { color: #ccc; text-decoration: none; font-size: .9rem; transition: color .2s; }
+.nav-link:hover { color: var(--gold); }
+.cart-btn {
+  background: var(--gold); color: var(--espresso);
+  border: none; border-radius: 24px;
+  padding: .45rem 1.1rem; font-weight: 600; font-size: .9rem;
+  display: flex; align-items: center; gap: .4rem;
+  transition: background .2s, transform .1s;
+}
+.cart-btn:hover { background: var(--gold-lt); transform: scale(1.03); }
+.cart-count {
+  background: var(--espresso); color: var(--gold);
+  border-radius: 50%; width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .72rem; font-weight: 700;
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--espresso) 0%, var(--mocha) 60%, #5C3A1E 100%);
+  min-height: 500px;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 4rem 2rem;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,.12) 0%, transparent 65%);
+}
+.hero-content { position: relative; max-width: 640px; }
+.hero-eyebrow {
+  color: var(--gold); font-size: .8rem; letter-spacing: .2em;
+  text-transform: uppercase; margin-bottom: 1rem;
+}
+.hero h1 { color: #fff; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.15; margin-bottom: 1rem; }
+.hero h1 em { color: var(--gold-lt); font-style: italic; }
+.hero p { color: #c8b9a8; font-size: 1.05rem; margin-bottom: 2rem; }
+.btn-primary {
+  background: var(--gold); color: var(--espresso);
+  border: none; border-radius: 32px;
+  padding: .8rem 2.2rem; font-weight: 600; font-size: 1rem;
+  letter-spacing: .03em; transition: all .2s;
+  display: inline-block; text-decoration: none;
+}
+.btn-primary:hover { background: var(--gold-lt); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,168,76,.35); }
+.btn-outline {
+  background: transparent; color: var(--gold);
+  border: 1.5px solid var(--gold); border-radius: 32px;
+  padding: .75rem 2rem; font-weight: 500; font-size: .95rem;
+  transition: all .2s;
+}
+.btn-outline:hover { background: var(--gold); color: var(--espresso); }
+
+/* ── Section shell ────────────────────────────────────────── */
+.section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+.section-title { font-size: 1.9rem; margin-bottom: .4rem; }
+.section-sub { color: var(--muted); font-size: .95rem; margin-bottom: 2.5rem; }
+
+/* ── Category pills ───────────────────────────────────────── */
+.filter-bar { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 2rem; }
+.pill {
+  background: var(--warm-gray); border: none; border-radius: 20px;
+  padding: .4rem 1rem; font-size: .85rem; color: var(--muted);
+  transition: all .18s; cursor: pointer;
+}
+.pill.active, .pill:hover { background: var(--espresso); color: var(--gold); }
+
+/* ── Product grid ─────────────────────────────────────────── */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+
+.product-card {
+  background: #fff; border-radius: 14px;
+  overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  transition: transform .2s, box-shadow .2s;
+  display: flex; flex-direction: column;
+}
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,.12); }
+
+.product-img {
+  width: 100%; height: 240px; object-fit: cover;
+  background: var(--warm-gray);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4rem; color: var(--muted);
+}
+.product-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.product-body { padding: 1.1rem; flex: 1; display: flex; flex-direction: column; }
+.product-category { font-size: .73rem; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; }
+.product-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin-bottom: .3rem; }
+.product-meta { font-size: .8rem; color: var(--muted); margin-bottom: .6rem; }
+
+.product-price { display: flex; align-items: baseline; gap: .5rem; margin-bottom: 1rem; }
+.price-current { font-size: 1.2rem; font-weight: 700; color: var(--espresso); }
+.price-original { font-size: .9rem; color: var(--muted); text-decoration: line-through; }
+.badge-sale {
+  background: var(--danger); color: #fff;
+  font-size: .7rem; font-weight: 600; border-radius: 4px;
+  padding: .15rem .4rem; letter-spacing: .04em;
+}
+
+.stock-low { font-size: .78rem; color: #E67E22; font-weight: 500; }
+.stock-out { font-size: .78rem; color: var(--danger); font-weight: 500; }
+
+.add-btn {
+  margin-top: auto;
+  background: var(--espresso); color: var(--gold);
+  border: none; border-radius: 8px;
+  padding: .65rem; font-weight: 600; font-size: .9rem;
+  width: 100%; transition: background .2s;
+}
+.add-btn:hover:not(:disabled) { background: var(--mocha); }
+.add-btn:disabled { background: var(--warm-gray); color: var(--muted); cursor: not-allowed; }
+
+/* ── Empty state ──────────────────────────────────────────── */
+.empty { text-align: center; padding: 4rem 1rem; color: var(--muted); }
+.empty-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+
+/* ── Cart drawer ──────────────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+
+.drawer {
+  position: fixed; top: 0; right: 0; height: 100%;
+  width: min(420px, 100vw);
+  background: var(--cream); z-index: 300;
+  transform: translateX(100%); transition: transform .3s ease;
+  display: flex; flex-direction: column;
+  box-shadow: -4px 0 30px rgba(0,0,0,.2);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head {
+  background: var(--espresso); color: #fff;
+  padding: 1.2rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.drawer-head h3 { font-size: 1.2rem; color: var(--gold); }
+.close-btn { background: none; border: none; color: #aaa; font-size: 1.5rem; line-height: 1; }
+.close-btn:hover { color: #fff; }
+.drawer-body { flex: 1; overflow-y: auto; padding: 1.2rem 1.5rem; }
+.drawer-foot { padding: 1.2rem 1.5rem; border-top: 1px solid var(--warm-gray); }
+
+.cart-item {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: .9rem 0; border-bottom: 1px solid var(--warm-gray);
+}
+.cart-thumb {
+  width: 64px; height: 64px; border-radius: 8px;
+  object-fit: cover; background: var(--warm-gray);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+}
+.cart-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.cart-item-info { flex: 1; }
+.cart-item-name { font-weight: 600; font-size: .9rem; margin-bottom: .2rem; }
+.cart-item-price { font-size: .85rem; color: var(--muted); }
+.cart-qty { display: flex; align-items: center; gap: .5rem; margin-top: .4rem; }
+.qty-btn {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1.5px solid var(--warm-gray); background: #fff;
+  font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  color: var(--text); transition: all .15s;
+}
+.qty-btn:hover { border-color: var(--espresso); background: var(--espresso); color: #fff; }
+.qty-num { font-weight: 600; min-width: 20px; text-align: center; font-size: .9rem; }
+.remove-btn { background: none; border: none; color: #ccc; font-size: 1.1rem; }
+.remove-btn:hover { color: var(--danger); }
+
+.cart-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; }
+.wa-btn {
+  width: 100%; padding: .85rem;
+  background: var(--wa-green); color: #fff;
+  border: none; border-radius: 10px;
+  font-size: 1rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  transition: background .2s, transform .1s;
+}
+.wa-btn:hover { background: #1ebe5d; transform: scale(1.02); }
+.wa-btn svg { width: 22px; height: 22px; fill: #fff; }
+
+/* ── WhatsApp FAB ─────────────────────────────────────────── */
+.wa-fab {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 150;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--wa-green); border: none;
+  box-shadow: 0 4px 20px rgba(37,211,102,.45);
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse-wa 2.5s infinite;
+  transition: transform .2s;
+}
+.wa-fab:hover { transform: scale(1.1); }
+.wa-fab svg { width: 32px; height: 32px; fill: #fff; }
+@keyframes pulse-wa {
+  0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,.45); }
+  50% { box-shadow: 0 4px 32px rgba(37,211,102,.75); }
+}
+
+/* ── Admin drawer ─────────────────────────────────────────── */
+.admin-drawer {
+  position: fixed; top: 0; right: 0; height: 100%;
+  width: min(540px, 100vw);
+  background: #fff; z-index: 400;
+  transform: translateX(100%); transition: transform .3s ease;
+  display: flex; flex-direction: column;
+  box-shadow: -4px 0 40px rgba(0,0,0,.25);
+}
+.admin-drawer.open { transform: translateX(0); }
+.admin-head {
+  background: var(--espresso); padding: 1.2rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.admin-head h3 { color: var(--gold); font-size: 1.1rem; }
+.admin-body { flex: 1; overflow-y: auto; padding: 1.5rem; }
+.admin-body h4 { margin-bottom: 1rem; font-size: 1rem; color: var(--mocha); }
+
+/* Form styles */
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: .82rem; font-weight: 600; color: var(--muted); margin-bottom: .35rem; text-transform: uppercase; letter-spacing: .05em; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: .6rem .85rem;
+  border: 1.5px solid var(--warm-gray); border-radius: 8px;
+  font-family: 'Inter', sans-serif; font-size: .9rem; color: var(--text);
+  transition: border-color .2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--gold);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.form-check { display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem; }
+.form-check input { width: auto; }
+
+.submit-btn {
+  width: 100%; padding: .75rem;
+  background: var(--espresso); color: var(--gold);
+  border: none; border-radius: 8px;
+  font-weight: 600; font-size: .95rem; margin-top: .5rem;
+  transition: background .2s;
+}
+.submit-btn:hover { background: var(--mocha); }
+
+/* Product list in admin */
+.admin-product-list { margin-top: 2rem; border-top: 1px solid var(--warm-gray); padding-top: 1.5rem; }
+.admin-product-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: .8rem; border-radius: 8px; margin-bottom: .5rem;
+  background: var(--cream); border: 1px solid var(--warm-gray);
+}
+.admin-product-item .info { flex: 1; font-size: .85rem; }
+.admin-product-item .info strong { display: block; }
+.admin-product-item .info span { color: var(--muted); }
+.del-btn {
+  background: none; border: 1.5px solid #f5c6c6; border-radius: 6px;
+  color: var(--danger); padding: .3rem .6rem; font-size: .8rem;
+  transition: all .15s;
+}
+.del-btn:hover { background: var(--danger); color: #fff; }
+.edit-btn {
+  background: none; border: 1.5px solid var(--warm-gray); border-radius: 6px;
+  color: var(--muted); padding: .3rem .6rem; font-size: .8rem;
+  transition: all .15s;
+}
+.edit-btn:hover { background: var(--espresso); color: var(--gold); border-color: var(--espresso); }
+
+/* Password gate */
+.pwd-gate {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 3rem 1.5rem; gap: 1rem;
+}
+.pwd-gate h4 { font-size: 1.1rem; }
+.pwd-gate input { width: 100%; max-width: 280px; padding: .6rem 1rem; border: 1.5px solid var(--warm-gray); border-radius: 8px; font-size: .95rem; }
+.pwd-gate button { padding: .6rem 2rem; background: var(--espresso); color: var(--gold); border: none; border-radius: 8px; font-weight: 600; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 6rem; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--espresso); color: var(--gold);
+  padding: .7rem 1.5rem; border-radius: 24px; font-size: .9rem; font-weight: 500;
+  opacity: 0; transition: all .3s; pointer-events: none; z-index: 500;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Checkout form in cart ─────────────────────────────────── */
+.checkout-form { margin-top: 1rem; }
+.checkout-form h4 { font-size: .95rem; margin-bottom: .8rem; color: var(--mocha); }
+.checkout-form input {
+  width: 100%; margin-bottom: .6rem; padding: .55rem .85rem;
+  border: 1.5px solid var(--warm-gray); border-radius: 8px;
+  font-family: 'Inter', sans-serif; font-size: .88rem;
+}
+.checkout-form input:focus { outline: none; border-color: var(--gold); }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  nav { padding: 0 1rem; }
+  .section { padding: 2.5rem 1rem; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Nav ───────────────────────────────────────────────── -->
+<nav>
+  <a class="nav-brand" href="#"><span id="navBrand">✦ ZandiHair</span></a>
+  <div class="nav-right">
+    <a class="nav-link" href="#shop">Shop</a>
+    <a class="nav-link" href="#" onclick="openAdmin()">Admin</a>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── Hero ──────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow" id="heroTagline">Premium Quality · Ethically Sourced</p>
+    <h1 id="heroTitle">Your Hair, <em>Reimagined.</em></h1>
+    <p id="heroSub">Extensions, wigs, weaves and more — crafted for women who refuse to settle.</p>
+    <a href="#shop" class="btn-primary">Shop the Collection</a>
+  </div>
+</div>
+
+<!-- ── Shop ──────────────────────────────────────────────── -->
+<div id="shop">
+  <div class="section">
+    <h2 class="section-title">Our Collection</h2>
+    <p class="section-sub">Filter by category or browse everything</p>
+
+    <div class="filter-bar" id="filterBar">
+      <button class="pill active" onclick="filterProducts('All', this)">All</button>
+      <button class="pill" onclick="filterProducts('Extensions', this)">Extensions</button>
+      <button class="pill" onclick="filterProducts('Wigs', this)">Wigs</button>
+      <button class="pill" onclick="filterProducts('Weave', this)">Weave</button>
+      <button class="pill" onclick="filterProducts('Clip-Ins', this)">Clip-Ins</button>
+      <button class="pill" onclick="filterProducts('Frontals', this)">Frontals</button>
+      <button class="pill" onclick="filterProducts('Accessories', this)">Accessories</button>
+    </div>
+
+    <div class="product-grid" id="productGrid">
+      <!-- Rendered by JS -->
+    </div>
+    <div class="empty" id="emptyState" style="display:none">
+      <div class="empty-icon">💇‍♀️</div>
+      <h3>No products yet</h3>
+      <p>The admin can add products using the Admin panel.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Overlay ────────────────────────────────────────────── -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- ── Cart drawer ───────────────────────────────────────── -->
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="close-btn" onclick="closeAll()">✕</button>
+  </div>
+  <div class="drawer-body" id="cartBody"><!-- JS --></div>
+  <div class="drawer-foot" id="cartFoot" style="display:none">
+    <div class="checkout-form">
+      <h4>Your Details (for the order)</h4>
+      <input type="text" id="custName" placeholder="Your name *" />
+      <input type="tel" id="custPhone" placeholder="Your phone number *" />
+      <input type="text" id="custAddress" placeholder="Delivery address (optional)" />
+    </div>
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">R0.00</span>
+    </div>
+    <button class="wa-btn" onclick="sendWhatsApp()">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.523 5.845L.057 23.428a.75.75 0 0 0 .927.926l5.688-1.461A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.717 9.717 0 0 1-4.953-1.354l-.355-.21-3.676.944.974-3.572-.23-.368A9.718 9.718 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+      Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- ── Admin drawer ───────────────────────────────────────── -->
+<div class="admin-drawer" id="adminDrawer">
+  <div class="admin-head">
+    <h3>⚙ Admin Panel</h3>
+    <button class="close-btn" onclick="closeAdmin()">✕</button>
+  </div>
+  <div class="admin-body">
+
+    <!-- Password gate -->
+    <div id="pwdGate" class="pwd-gate">
+      <div style="font-size:2.5rem">🔒</div>
+      <h4>Admin Access</h4>
+      <p style="font-size:.85rem;color:var(--muted);text-align:center">Enter the admin password to manage products.</p>
+      <input type="password" id="adminPwd" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()" />
+      <button onclick="checkPwd()">Unlock</button>
+      <p style="font-size:.78rem;color:var(--muted)">Default password: <strong>luxehair2024</strong></p>
+    </div>
+
+    <!-- Admin content (hidden until unlocked) -->
+    <div id="adminContent" style="display:none">
+
+      <!-- Add / Edit product form -->
+      <h4 id="formTitle">Add New Product</h4>
+      <input type="hidden" id="editId" value="" />
+
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input type="text" id="pName" placeholder="e.g. Brazilian Body Wave Bundle" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="pCategory">
+            <option>Extensions</option><option>Wigs</option><option>Weave</option>
+            <option>Clip-Ins</option><option>Frontals</option><option>Closures</option><option>Accessories</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Hair Texture</label>
+          <select id="pTexture">
+            <option value="">— None —</option>
+            <option>Straight</option><option>Body Wave</option><option>Deep Wave</option>
+            <option>Loose Wave</option><option>Curly</option><option>Kinky Curly</option><option>Water Wave</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Length</label>
+          <input type="text" id="pLength" placeholder="e.g. 20 inch" />
+        </div>
+        <div class="form-group">
+          <label>Color</label>
+          <input type="text" id="pColor" placeholder="e.g. Natural Black" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price (R) *</label>
+          <input type="number" id="pPrice" placeholder="0.00" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Stock Count *</label>
+          <input type="number" id="pStock" placeholder="0" min="0" />
+        </div>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" id="pOnSale" onchange="toggleSale()" />
+        <label for="pOnSale" style="font-size:.88rem;font-weight:500">Put on Sale</label>
+      </div>
+      <div id="saleField" style="display:none" class="form-group">
+        <label>Discount %</label>
+        <input type="number" id="pDiscount" placeholder="e.g. 20" min="1" max="99" />
+      </div>
+      <div class="form-group">
+        <label>Image URL (paste a link to a photo)</label>
+        <input type="url" id="pImage" placeholder="https://..." />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="pDesc" rows="3" style="resize:vertical"></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="saveProduct()">Save Product</button>
+      <button id="cancelEdit" style="display:none;width:100%;margin-top:.5rem;padding:.65rem;background:none;border:1.5px solid var(--warm-gray);border-radius:8px;color:var(--muted);font-size:.9rem;" onclick="cancelEdit()">Cancel Edit</button>
+
+      <!-- Existing products list -->
+      <div class="admin-product-list">
+        <h4>Existing Products (<span id="productCount">0</span>)</h4>
+        <div id="adminProductList"><!-- JS --></div>
+      </div>
+
+      <!-- Store branding -->
+      <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--warm-gray)">
+        <h4>🎨 Store Branding</h4>
+        <div class="form-group">
+          <label>Store Name</label>
+          <input type="text" id="sStoreName" placeholder="e.g. ZandiHair" />
+        </div>
+        <div class="form-group">
+          <label>Tagline (below nav hero)</label>
+          <input type="text" id="sTagline" placeholder="e.g. Premium Quality · Ethically Sourced" />
+        </div>
+        <div class="form-group">
+          <label>Hero Heading</label>
+          <input type="text" id="sHeroTitle" placeholder="e.g. Your Hair, Reimagined." />
+        </div>
+        <div class="form-group">
+          <label>Hero Subtext</label>
+          <input type="text" id="sHeroSub" placeholder="One-line description shown on the homepage" />
+        </div>
+        <button class="submit-btn" onclick="saveBranding()">Apply Branding</button>
+      </div>
+
+      <!-- WhatsApp number setting -->
+      <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--warm-gray)">
+        <h4>WhatsApp Number</h4>
+        <div class="form-group">
+          <label>Owner's number (with country code, no +)</label>
+          <input type="tel" id="waNumber" placeholder="27821234567" />
+        </div>
+        <button class="submit-btn" onclick="saveWaNumber()">Save Number</button>
+      </div>
+
+      <!-- Change password -->
+      <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--warm-gray)">
+        <h4>Change Admin Password</h4>
+        <div class="form-group">
+          <input type="password" id="newPwd" placeholder="New password" />
+        </div>
+        <button class="submit-btn" onclick="changePassword()">Update Password</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── WhatsApp FAB ───────────────────────────────────────── -->
+<button class="wa-fab" onclick="openCart()" title="View cart & order">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.523 5.845L.057 23.428a.75.75 0 0 0 .927.926l5.688-1.461A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.717 9.717 0 0 1-4.953-1.354l-.355-.21-3.676.944.974-3.572-.23-.368A9.718 9.718 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+</button>
+
+<!-- ── Toast ──────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Storage helpers ─────────────────────────────────────────
+const store = {
+  get: k => { try { return JSON.parse(localStorage.getItem(k)) } catch { return null } },
+  set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
+};
+
+// ── State ────────────────────────────────────────────────────
+let products = store.get('lh_products') || [];
+let cart     = store.get('lh_cart')     || [];
+let waNumber = store.get('lh_wa')       || '27000000000';
+let adminPwd  = store.get('lh_pwd')      || 'luxehair2024';
+let storeName = store.get('lh_name')     || 'ZandiHair';
+let storeTagline = store.get('lh_tagline') || 'Premium Quality · Ethically Sourced';
+let heroTitle = store.get('lh_herotitle') || 'Your Hair, <em>Reimagined.</em>';
+let heroSub   = store.get('lh_herosub')  || 'Extensions, wigs, weaves and more — crafted for women who refuse to settle.';
+let adminUnlocked = false;
+let currentFilter = 'All';
+
+// ── Toast ─────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── Products ──────────────────────────────────────────────────
+function saveProducts() { store.set('lh_products', products); }
+
+function renderProducts() {
+  const grid  = document.getElementById('productGrid');
+  const empty = document.getElementById('emptyState');
+  const list  = products.filter(p => currentFilter === 'All' || p.category === currentFilter);
+
+  if (!list.length) {
+    grid.innerHTML = ''; empty.style.display = 'block'; return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = list.map(p => {
+    const outOfStock = p.stock <= 0;
+    const lowStock   = p.stock > 0 && p.stock <= 5;
+    const salePrice  = p.onSale && p.discount ? (p.price - p.price * p.discount / 100) : null;
+
+    return `
+    <div class="product-card">
+      <div class="product-img">
+        ${p.image
+          ? `<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='💇'" />`
+          : '💇'}
+      </div>
+      <div class="product-body">
+        <div class="product-category">${p.category}${p.texture ? ' · ' + p.texture : ''}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-meta">${[p.length, p.color].filter(Boolean).join(' · ') || '&nbsp;'}</div>
+        <div class="product-price">
+          <span class="price-current">R${(salePrice ?? p.price).toFixed(2)}</span>
+          ${salePrice ? `<span class="price-original">R${p.price.toFixed(2)}</span><span class="badge-sale">-${p.discount}%</span>` : ''}
+        </div>
+        ${outOfStock ? `<div class="stock-out">Out of stock</div>` :
+          lowStock   ? `<div class="stock-low">Only ${p.stock} left!</div>` : ''}
+        ${p.desc ? `<div style="font-size:.8rem;color:var(--muted);margin-bottom:.6rem">${p.desc}</div>` : ''}
+        <button class="add-btn" onclick="addToCart('${p.id}')" ${outOfStock ? 'disabled' : ''}>
+          ${outOfStock ? 'Out of Stock' : 'Add to Cart'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterProducts(cat, el) {
+  currentFilter = cat;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts();
+}
+
+// ── Cart ──────────────────────────────────────────────────────
+function saveCart() { store.set('lh_cart', cart); }
+
+function addToCart(id) {
+  const product = products.find(p => p.id === id);
+  if (!product || product.stock <= 0) return;
+  const salePrice = product.onSale && product.discount
+    ? product.price - product.price * product.discount / 100 : null;
+  const price = salePrice ?? product.price;
+
+  const existing = cart.find(c => c.id === id);
+  if (existing) {
+    if (existing.qty >= product.stock) { showToast('No more stock available'); return; }
+    existing.qty++;
+  } else {
+    cart.push({ id, name: product.name, price, image: product.image, qty: 1, maxQty: product.stock });
+  }
+  saveCart(); updateCartCount(); showToast('Added to cart ✓');
+}
+
+function updateCartCount() {
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cartCount').textContent = total;
+}
+
+function openCart() {
+  renderCart();
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function renderCart() {
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFoot');
+
+  if (!cart.length) {
+    body.innerHTML = `
+      <div class="empty" style="padding:3rem 1rem">
+        <div class="empty-icon">🛒</div>
+        <p>Your cart is empty.</p>
+        <button class="btn-outline" onclick="closeAll()" style="margin-top:1rem">Browse Products</button>
+      </div>`;
+    foot.style.display = 'none'; return;
+  }
+
+  body.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-thumb">
+        ${item.image ? `<img src="${item.image}" onerror="this.parentElement.innerHTML='💇'" />` : '💇'}
+      </div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">R${item.price.toFixed(2)} each</div>
+        <div class="cart-qty">
+          <button class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:.9rem">R${(item.price * item.qty).toFixed(2)}</div>
+        <button class="remove-btn" onclick="removeFromCart('${item.id}')">✕</button>
+      </div>
+    </div>`).join('');
+
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  document.getElementById('cartTotal').textContent = `R${total.toFixed(2)}`;
+  foot.style.display = 'block';
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+  else if (item.qty > item.maxQty) { item.qty = item.maxQty; showToast('Max stock reached'); }
+  saveCart(); updateCartCount(); renderCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  saveCart(); updateCartCount(); renderCart();
+}
+
+// ── WhatsApp order ────────────────────────────────────────────
+function sendWhatsApp() {
+  const name    = document.getElementById('custName').value.trim();
+  const phone   = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+
+  if (!name)  { showToast('Please enter your name'); return; }
+  if (!phone) { showToast('Please enter your phone number'); return; }
+  if (!cart.length) { showToast('Your cart is empty'); return; }
+
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const lines = cart.map(i => `  • ${i.name} x${i.qty} = R${(i.price * i.qty).toFixed(2)}`).join('\n');
+
+  const msg = encodeURIComponent(
+    `🛍 *New ` + storeName + ` Order*\n\n` +
+    `*Customer:* ${name}\n` +
+    `*Phone:* ${phone}\n` +
+    (address ? `*Address:* ${address}\n` : '') +
+    `\n*Items:*\n${lines}\n\n` +
+    `*Total: R${total.toFixed(2)}*\n\n` +
+    `Please confirm this order. Thank you! 💛`
+  );
+
+  window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
+}
+
+// ── Drawer helpers ────────────────────────────────────────────
+function closeAll() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function openAdmin() {
+  document.getElementById('adminDrawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+  if (adminUnlocked) renderAdminProducts();
+  document.getElementById('waNumber').value    = waNumber;
+  document.getElementById('sStoreName').value  = storeName;
+  document.getElementById('sTagline').value    = storeTagline;
+  document.getElementById('sHeroTitle').value  = heroTitle.replace(/<[^>]+>/g, '');
+  document.getElementById('sHeroSub').value    = heroSub;
+}
+
+function closeAdmin() {
+  document.getElementById('adminDrawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ── Admin auth ────────────────────────────────────────────────
+function checkPwd() {
+  const entered = document.getElementById('adminPwd').value;
+  if (entered === adminPwd) {
+    adminUnlocked = true;
+    document.getElementById('pwdGate').style.display = 'none';
+    document.getElementById('adminContent').style.display = 'block';
+    renderAdminProducts();
+  } else {
+    showToast('Incorrect password'); 
+    document.getElementById('adminPwd').value = '';
+  }
+}
+
+function changePassword() {
+  const np = document.getElementById('newPwd').value.trim();
+  if (!np || np.length < 4) { showToast('Password must be at least 4 characters'); return; }
+  adminPwd = np; store.set('lh_pwd', adminPwd);
+  document.getElementById('newPwd').value = '';
+  showToast('Password updated ✓');
+}
+
+// ── Admin: products ───────────────────────────────────────────
+function toggleSale() {
+  document.getElementById('saleField').style.display =
+    document.getElementById('pOnSale').checked ? 'block' : 'none';
+}
+
+function saveProduct() {
+  const name  = document.getElementById('pName').value.trim();
+  const price = parseFloat(document.getElementById('pPrice').value);
+  const stock = parseInt(document.getElementById('pStock').value);
+
+  if (!name)          { showToast('Product name is required'); return; }
+  if (isNaN(price) || price < 0) { showToast('Enter a valid price'); return; }
+  if (isNaN(stock) || stock < 0) { showToast('Enter a valid stock count'); return; }
+
+  const onSale   = document.getElementById('pOnSale').checked;
+  const discount = onSale ? parseInt(document.getElementById('pDiscount').value) || 0 : 0;
+  const editId   = document.getElementById('editId').value;
+
+  const productData = {
+    id:       editId || crypto.randomUUID(),
+    name, price, stock,
+    category: document.getElementById('pCategory').value,
+    texture:  document.getElementById('pTexture').value,
+    length:   document.getElementById('pLength').value.trim(),
+    color:    document.getElementById('pColor').value.trim(),
+    image:    document.getElementById('pImage').value.trim(),
+    desc:     document.getElementById('pDesc').value.trim(),
+    onSale, discount
+  };
+
+  if (editId) {
+    const idx = products.findIndex(p => p.id === editId);
+    if (idx !== -1) products[idx] = productData;
+  } else {
+    products.push(productData);
+  }
+
+  saveProducts(); clearForm(); renderProducts(); renderAdminProducts();
+  showToast(editId ? 'Product updated ✓' : 'Product added ✓');
+}
+
+function editProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('editId').value     = p.id;
+  document.getElementById('pName').value      = p.name;
+  document.getElementById('pPrice').value     = p.price;
+  document.getElementById('pStock').value     = p.stock;
+  document.getElementById('pCategory').value  = p.category;
+  document.getElementById('pTexture').value   = p.texture || '';
+  document.getElementById('pLength').value    = p.length || '';
+  document.getElementById('pColor').value     = p.color || '';
+  document.getElementById('pImage').value     = p.image || '';
+  document.getElementById('pDesc').value      = p.desc || '';
+  document.getElementById('pOnSale').checked  = p.onSale || false;
+  document.getElementById('pDiscount').value  = p.discount || '';
+  document.getElementById('saleField').style.display = p.onSale ? 'block' : 'none';
+  document.getElementById('formTitle').textContent = 'Edit Product';
+  document.getElementById('cancelEdit').style.display = 'block';
+  document.getElementById('adminBody')?.scrollTo(0, 0);
+  document.querySelector('.admin-body').scrollTop = 0;
+}
+
+function cancelEdit() {
+  clearForm();
+  document.getElementById('formTitle').textContent = 'Add New Product';
+  document.getElementById('cancelEdit').style.display = 'none';
+}
+
+function clearForm() {
+  ['pName','pPrice','pStock','pLength','pColor','pImage','pDesc','pDiscount','editId']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pCategory').selectedIndex = 0;
+  document.getElementById('pTexture').selectedIndex  = 0;
+  document.getElementById('pOnSale').checked = false;
+  document.getElementById('saleField').style.display = 'none';
+  document.getElementById('cancelEdit').style.display = 'none';
+  document.getElementById('formTitle').textContent = 'Add New Product';
+}
+
+function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  products = products.filter(p => p.id !== id);
+  cart = cart.filter(c => c.id !== id);
+  saveProducts(); saveCart(); updateCartCount();
+  renderProducts(); renderAdminProducts();
+  showToast('Product deleted');
+}
+
+function renderAdminProducts() {
+  document.getElementById('productCount').textContent = products.length;
+  const list = document.getElementById('adminProductList');
+  if (!products.length) {
+    list.innerHTML = `<p style="color:var(--muted);font-size:.85rem">No products added yet.</p>`;
+    return;
+  }
+  list.innerHTML = products.map(p => `
+    <div class="admin-product-item">
+      <div class="info">
+        <strong>${p.name}</strong>
+        <span>${p.category} · R${p.price.toFixed(2)} · Stock: ${p.stock}</span>
+      </div>
+      <button class="edit-btn" onclick="editProduct('${p.id}')">Edit</button>
+      <button class="del-btn" onclick="deleteProduct('${p.id}')">Delete</button>
+    </div>`).join('');
+}
+
+// ── WhatsApp number ───────────────────────────────────────────
+function saveWaNumber() {
+  const n = document.getElementById('waNumber').value.trim().replace(/\D/g,'');
+  if (!n) { showToast('Enter a valid number'); return; }
+  waNumber = n; store.set('lh_wa', n);
+  showToast('WhatsApp number saved ✓');
+}
+
+// ── Branding ─────────────────────────────────────────────────
+function applyBranding() {
+  document.getElementById('pageTitle').textContent  = storeName + ' — Premium Hair Collections';
+  document.getElementById('navBrand').textContent   = '✦ ' + storeName;
+  document.getElementById('heroTagline').textContent = storeTagline;
+  document.getElementById('heroTitle').innerHTML    = heroTitle;
+  document.getElementById('heroSub').textContent    = heroSub;
+  const fb = document.getElementById('footerBrand');
+  if (fb) fb.textContent = '✦ ' + storeName;
+}
+
+function saveBranding() {
+  const sn = document.getElementById('sStoreName').value.trim();
+  const st = document.getElementById('sTagline').value.trim();
+  const ht = document.getElementById('sHeroTitle').value.trim();
+  const hs = document.getElementById('sHeroSub').value.trim();
+  if (!sn) { showToast('Store name cannot be empty'); return; }
+  storeName    = sn;
+  storeTagline = st || storeTagline;
+  heroTitle    = ht || heroTitle;
+  heroSub      = hs || heroSub;
+  store.set('lh_name',      storeName);
+  store.set('lh_tagline',   storeTagline);
+  store.set('lh_herotitle', heroTitle);
+  store.set('lh_herosub',   heroSub);
+  applyBranding();
+  showToast('Branding updated ✓');
+}
+
+// ── Init ──────────────────────────────────────────────────────
+applyBranding();
+updateCartCount();
+renderProducts();
+</script>
+</body>
+</html>
